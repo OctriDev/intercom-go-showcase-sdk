@@ -17,7 +17,7 @@ type CreateContentImportSourceRequest struct {
 	// Url The URL of the content import source.
 	Url string `json:"url"`
 	// AudienceIds The unique identifiers for the audiences to associate with this content import source. Can be a single integer or an array of integers.
-	AudienceIds *NullableValue[CreateContentImportSourceRequestAudienceIds] `json:"audience_ids,omitempty"`
+	AudienceIds *NullableValue[[]int64] `json:"audience_ids,omitempty"`
 }
 
 func (value *CreateContentImportSourceRequest) UnmarshalJSON(data []byte) error {
@@ -38,7 +38,7 @@ func (value *CreateContentImportSourceRequest) UnmarshalJSON(data []byte) error 
 		return err
 	}
 	if raw, ok := rawFields["audience_ids"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.AudienceIds = &NullableValue[CreateContentImportSourceRequestAudienceIds]{}
+		value.AudienceIds = &NullableValue[[]int64]{}
 	}
 	return nil
 }
@@ -64,53 +64,6 @@ const (
 	CreateContentImportSourceRequestStatusEnumActive      CreateContentImportSourceRequestStatusEnum = "active"
 	CreateContentImportSourceRequestStatusEnumDeactivated CreateContentImportSourceRequestStatusEnum = "deactivated"
 )
-
-// CreateContentImportSourceRequestAudienceIds represents a union type.
-type CreateContentImportSourceRequestAudienceIds struct {
-	Int64       *int64
-	ListOfInt64 *[]int64
-}
-
-func (u *CreateContentImportSourceRequestAudienceIds) UnmarshalJSON(data []byte) error {
-	*u = CreateContentImportSourceRequestAudienceIds{}
-	var refusal error
-	var int642 int64
-	if err := json.Unmarshal(data, &int642); err == nil {
-		u.Int64 = &int642
-		return nil
-	}
-	var listofint64 []int64
-	if err := json.Unmarshal(data, &listofint64); err == nil && isNonEmptyCreateContentImportSourceRequestAudienceIdsListOfInt64(listofint64) {
-		u.ListOfInt64 = &listofint64
-		return nil
-	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
-		refusal = err
-	}
-	return refusal
-}
-
-func (u CreateContentImportSourceRequestAudienceIds) MarshalJSON() ([]byte, error) {
-	if u.Int64 != nil {
-		return json.Marshal(u.Int64)
-	}
-	if u.ListOfInt64 != nil {
-		return json.Marshal(u.ListOfInt64)
-	}
-	return []byte("null"), nil
-}
-
-func isNonEmptyCreateContentImportSourceRequestAudienceIdsListOfInt64(v []int64) bool {
-	b, _ := json.Marshal(v)
-	return string(b) != "{}" && string(b) != "null"
-}
-
-// UnmarshalCreateContentImportSourceRequestAudienceIds converts an untyped value to CreateContentImportSourceRequestAudienceIds.
-func UnmarshalCreateContentImportSourceRequestAudienceIds(v any) CreateContentImportSourceRequestAudienceIds {
-	b, _ := json.Marshal(v)
-	var result CreateContentImportSourceRequestAudienceIds
-	_ = json.Unmarshal(b, &result)
-	return result
-}
 
 // CreateExternalPageRequest You can add an External Page to your Fin Content Library.
 type CreateExternalPageRequest struct {
@@ -180,7 +133,7 @@ type UpdateContentImportSourceRequest struct {
 	// Url The URL of the content import source. This may only be different from the existing value if the sync behavior is API.
 	Url string `json:"url"`
 	// AudienceIds The unique identifiers for the audiences to associate with this content import source. Can be a single integer or an array of integers. Set to null or an empty array to remove all audiences.
-	AudienceIds *NullableValue[UpdateContentImportSourceRequestAudienceIds] `json:"audience_ids,omitempty"`
+	AudienceIds *NullableValue[[]int64] `json:"audience_ids,omitempty"`
 	// ApplyAudienceToExistingContent When true, the audience will be applied to all existing external pages belonging to this content import source.
 	ApplyAudienceToExistingContent *bool `json:"apply_audience_to_existing_content,omitempty"`
 }
@@ -203,7 +156,7 @@ func (value *UpdateContentImportSourceRequest) UnmarshalJSON(data []byte) error 
 		return err
 	}
 	if raw, ok := rawFields["audience_ids"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.AudienceIds = &NullableValue[UpdateContentImportSourceRequestAudienceIds]{}
+		value.AudienceIds = &NullableValue[[]int64]{}
 	}
 	return nil
 }
@@ -231,53 +184,6 @@ const (
 	UpdateContentImportSourceRequestStatusEnumActive      UpdateContentImportSourceRequestStatusEnum = "active"
 	UpdateContentImportSourceRequestStatusEnumDeactivated UpdateContentImportSourceRequestStatusEnum = "deactivated"
 )
-
-// UpdateContentImportSourceRequestAudienceIds represents a union type.
-type UpdateContentImportSourceRequestAudienceIds struct {
-	Int64       *int64
-	ListOfInt64 *[]int64
-}
-
-func (u *UpdateContentImportSourceRequestAudienceIds) UnmarshalJSON(data []byte) error {
-	*u = UpdateContentImportSourceRequestAudienceIds{}
-	var refusal error
-	var int642 int64
-	if err := json.Unmarshal(data, &int642); err == nil {
-		u.Int64 = &int642
-		return nil
-	}
-	var listofint64 []int64
-	if err := json.Unmarshal(data, &listofint64); err == nil && isNonEmptyUpdateContentImportSourceRequestAudienceIdsListOfInt64(listofint64) {
-		u.ListOfInt64 = &listofint64
-		return nil
-	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
-		refusal = err
-	}
-	return refusal
-}
-
-func (u UpdateContentImportSourceRequestAudienceIds) MarshalJSON() ([]byte, error) {
-	if u.Int64 != nil {
-		return json.Marshal(u.Int64)
-	}
-	if u.ListOfInt64 != nil {
-		return json.Marshal(u.ListOfInt64)
-	}
-	return []byte("null"), nil
-}
-
-func isNonEmptyUpdateContentImportSourceRequestAudienceIdsListOfInt64(v []int64) bool {
-	b, _ := json.Marshal(v)
-	return string(b) != "{}" && string(b) != "null"
-}
-
-// UnmarshalUpdateContentImportSourceRequestAudienceIds converts an untyped value to UpdateContentImportSourceRequestAudienceIds.
-func UnmarshalUpdateContentImportSourceRequestAudienceIds(v any) UpdateContentImportSourceRequestAudienceIds {
-	b, _ := json.Marshal(v)
-	var result UpdateContentImportSourceRequestAudienceIds
-	_ = json.Unmarshal(b, &result)
-	return result
-}
 
 // UpdateExternalPageRequest You can update an External Page in your Fin Content Library.
 type UpdateExternalPageRequest struct {

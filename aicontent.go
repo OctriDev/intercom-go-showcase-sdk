@@ -37,7 +37,7 @@ type CreateContentImportSourceParams struct {
 	Url             string
 	IntercomVersion *IntercomVersion
 	Status          *string
-	AudienceIds     *any
+	AudienceIds     *NullableValue[[]int64]
 }
 
 // CreateContentImportSource creates a content import source for external pages in your Fin Content Library. Supply `sync_behavior` as `api` and provide the source `url`; you can also set its status and associate audiences.
@@ -145,7 +145,7 @@ type UpdateContentImportSourceParams struct {
 	Url                            string
 	IntercomVersion                *IntercomVersion
 	Status                         *string
-	AudienceIds                    *any
+	AudienceIds                    *NullableValue[[]int64]
 	ApplyAudienceToExistingContent *bool
 }
 
