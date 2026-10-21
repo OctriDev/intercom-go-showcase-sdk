@@ -496,8 +496,8 @@ func sdkMethodByName(name string) any {
 		return SubmitFinCsat
 	case "UnarchiveContact":
 		return UnarchiveContact
-	case "UnlinkTicketsConversation":
-		return UnlinkTicketsConversation
+	case "UnlinkTicketConversation":
+		return UnlinkTicketConversation
 	case "UpdateArticle":
 		return UpdateArticle
 	case "UpdateAudience":

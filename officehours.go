@@ -8,32 +8,6 @@ import (
 	"fmt"
 )
 
-type DeleteOfficeHoursExceptionResponse struct {
-	Id      *string `json:"id,omitempty"`
-	Object  *string `json:"object,omitempty"`
-	Deleted *bool   `json:"deleted,omitempty"`
-}
-
-// NewDeleteOfficeHoursExceptionResponse returns a validated DeleteOfficeHoursExceptionResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewDeleteOfficeHoursExceptionResponse(fields DeleteOfficeHoursExceptionResponse) (*DeleteOfficeHoursExceptionResponse, error) {
-	return ConstructModel(fields)
-}
-
-type DeleteOfficeHoursScheduleResponse struct {
-	Id      *string `json:"id,omitempty"`
-	Object  *string `json:"object,omitempty"`
-	Deleted *bool   `json:"deleted,omitempty"`
-}
-
-// NewDeleteOfficeHoursScheduleResponse returns a validated DeleteOfficeHoursScheduleResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewDeleteOfficeHoursScheduleResponse(fields DeleteOfficeHoursScheduleResponse) (*DeleteOfficeHoursScheduleResponse, error) {
-	return ConstructModel(fields)
-}
-
 type GetOfficeHoursExceptionParams struct {
 	OfficeHoursScheduleId string
 	Id                    string
@@ -420,4 +394,30 @@ func CreateOfficeHoursSchedule(ctx context.Context, clientConfig ClientConfig, p
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+type DeleteOfficeHoursExceptionResponse struct {
+	Id      *string `json:"id,omitempty"`
+	Object  *string `json:"object,omitempty"`
+	Deleted *bool   `json:"deleted,omitempty"`
+}
+
+// NewDeleteOfficeHoursExceptionResponse returns a validated DeleteOfficeHoursExceptionResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewDeleteOfficeHoursExceptionResponse(fields DeleteOfficeHoursExceptionResponse) (*DeleteOfficeHoursExceptionResponse, error) {
+	return ConstructModel(fields)
+}
+
+type DeleteOfficeHoursScheduleResponse struct {
+	Id      *string `json:"id,omitempty"`
+	Object  *string `json:"object,omitempty"`
+	Deleted *bool   `json:"deleted,omitempty"`
+}
+
+// NewDeleteOfficeHoursScheduleResponse returns a validated DeleteOfficeHoursScheduleResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewDeleteOfficeHoursScheduleResponse(fields DeleteOfficeHoursScheduleResponse) (*DeleteOfficeHoursScheduleResponse, error) {
+	return ConstructModel(fields)
 }

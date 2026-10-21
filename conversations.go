@@ -9,60 +9,6 @@ import (
 	"fmt"
 )
 
-type CreateConversationResponse struct {
-	// Type The type of the message
-	Type string `json:"type"`
-	// Id The id representing the message.
-	Id string `json:"id"`
-	// CreatedAt The time the conversation was created.
-	CreatedAt int64 `json:"created_at"`
-	// Subject The subject of the message. Only present if message_type: email.
-	Subject *string `json:"subject,omitempty"`
-	// Body The message body, which may contain HTML.
-	Body string `json:"body"`
-	// MessageType The type of message that was sent. Can be email, inapp, facebook or twitter.
-	MessageType CreateConversationResponseMessageTypeEnum `json:"message_type"`
-	// ConversationId The associated conversation_id
-	ConversationId string `json:"conversation_id"`
-}
-
-func (value *CreateConversationResponse) UnmarshalJSON(data []byte) error {
-	type CreateConversationResponseAlias CreateConversationResponse
-	var decoded CreateConversationResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CreateConversationResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"type", "id", "created_at", "body", "message_type", "conversation_id"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type", "id", "created_at", "body", "message_type", "conversation_id"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCreateConversationResponse returns a validated CreateConversationResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCreateConversationResponse(fields CreateConversationResponse) (*CreateConversationResponse, error) {
-	return ConstructModel(fields)
-}
-
-// CreateConversationResponseMessageTypeEnum The type of message that was sent. Can be email, inapp, facebook or twitter.
-type CreateConversationResponseMessageTypeEnum string
-
-const (
-	CreateConversationResponseMessageTypeEnumEmail    CreateConversationResponseMessageTypeEnum = "email"
-	CreateConversationResponseMessageTypeEnumInapp    CreateConversationResponseMessageTypeEnum = "inapp"
-	CreateConversationResponseMessageTypeEnumFacebook CreateConversationResponseMessageTypeEnum = "facebook"
-	CreateConversationResponseMessageTypeEnumTwitter  CreateConversationResponseMessageTypeEnum = "twitter"
-)
-
 type ListConversationsParams struct {
 	PerPage           *int64
 	StartingAfter     *string
@@ -335,375 +281,56 @@ func DeleteConversation(ctx context.Context, clientConfig ClientConfig, params D
 	return &resp.Data, nil
 }
 
-type SearchConversationsParams struct {
-	Query             SearchRequestQuery
-	IncludeMonitors   *bool
-	IncludeScorecards *bool
-	IntercomVersion   *IntercomVersion
-	Pagination        *NullableValue[StartingAfterPaging]
+type CreateConversationResponse struct {
+	// Type The type of the message
+	Type string `json:"type"`
+	// Id The id representing the message.
+	Id string `json:"id"`
+	// CreatedAt The time the conversation was created.
+	CreatedAt int64 `json:"created_at"`
+	// Subject The subject of the message. Only present if message_type: email.
+	Subject *string `json:"subject,omitempty"`
+	// Body The message body, which may contain HTML.
+	Body string `json:"body"`
+	// MessageType The type of message that was sent. Can be email, inapp, facebook or twitter.
+	MessageType CreateConversationResponseMessageTypeEnum `json:"message_type"`
+	// ConversationId The associated conversation_id
+	ConversationId string `json:"conversation_id"`
 }
 
-// SearchConversations searches conversations using filters on searchable conversation attributes. Provide a `query` filter expression and use pagination to control result size; pages default to 20 results and can contain up to 150. Use the `starting_after` cursor from the response to fetch subsequent pages.
-//
-// You can search for multiple conversations by the value of their attributes in order to fetch exactly which ones you want. To search for conversations, you need to send a `POST` request to `https://api.intercom.io/conversations/search`. This will accept a query object in the body which will define your filters in order to search for conversations. {% admonition type="warning" name="Optimizing search queries" %} Search queries can be complex, so optimizing them can help the performance of your search. Use the `AND` and `OR` operators to combine multiple filters to get the exact results you need and utilize pagination to limit the number of results returned. The default is `20` results per page and maximum is `150`. See the [pagination section](https://developers.intercom.com/docs/build-an-integration/learn-more/rest-apis/pagination/#example-search-conversations-request) for more details on how to use the `starting_after` param. {% /admonition %} ### Nesting & Limitations You can nest these filters in order to get even more granular insights that pinpoint exactly what you need. Example: (1 OR 2) AND (3 OR 4). There are some limitations to the amount of multiple's there can be: - There's a limit of max 2 nested filters - There's a limit of max 15 filters for each AND or OR group ### Accepted Fields Most keys listed in the conversation model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as `created_at` accepts a date, the `value` cannot be a string such as `"foorbar"`). The `source.body` field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a `"I need support"` body - the query should contain a `=` operator with the value `"support"` for such conversation to be returned. A query with a `=` operator and a `"need support"` value will not yield a result.…
-//
-// Parameters:
-//
-//	query: Required API value serialized in the `query` wire field.
-//	includeMonitors: If set to true, the response will include a
-//	`monitor_evaluations` array on each conversation with any QA monitor results
-//	that flagged it.
-//	includeScorecards: If set to true, the response will include a `scorecards`
-//	array on each conversation with any QA scorecard results.
-//	pagination: Optional object value serialized in the `pagination` wire field.
-func SearchConversations(ctx context.Context, clientConfig ClientConfig, params SearchConversationsParams, opts ...RequestOption) (*ConversationList, error) {
-	query := params.Query
-	includeMonitors := params.IncludeMonitors
-	includeScorecards := params.IncludeScorecards
-	intercomVersion := params.IntercomVersion
-	pagination := params.Pagination
-
-	resp, err := DoCfg[ConversationList](ctx, &clientConfig, "POST", "/conversations/search", &RequestOpts{
-		Query: map[string]any{
-			"include_monitors":   QueryValue{Value: includeMonitors, Style: "form", Explode: true},
-			"include_scorecards": QueryValue{Value: includeScorecards, Style: "form", Explode: true},
-		},
-		Body: map[string]any{
-			"query":      query,
-			"pagination": pagination,
-		},
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "SearchConversations",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
+func (value *CreateConversationResponse) UnmarshalJSON(data []byte) error {
+	type CreateConversationResponseAlias CreateConversationResponse
+	var decoded CreateConversationResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
 	}
-	return &resp.Data, nil
-}
-
-type ReplyConversationParams struct {
-	ConversationId  string
-	IntercomVersion *IntercomVersion
-	Body            *ReplyConversationRequest
-}
-
-// ReplyConversation replies to a conversation with a message from an admin or on behalf of a contact, or adds an admin note. Choose the appropriate reply payload and supply its required fields; for admin replies, `message_type` selects a comment, note, or quick reply. Bot replies to inbound email conversations are not delivered as outbound email by default.
-//
-// You can reply to a conversation with a message from an admin or on behalf of a contact, or with a note for admins. {% admonition type="warning" name="Bot replies to inbound email" %} By default, bot or Operator replies to an inbound email conversation aren't sent to your customer. The reply is stored as an unnotifiable bot comment, and no `seen` receipt is generated until an email is actually delivered. To send these replies as outbound emails, reach out to your accounts team to enable the email-reply feature flag for your workspace. {% /admonition %} {% admonition type="info" name="Managing a conversation" %} To close, open, snooze or assign a conversation, use Manage a conversation. {% /admonition %}
-//
-// Parameters:
-//
-//	conversationId: The Intercom provisioned identifier for the conversation or
-//	the string "last" to reply to the last part of the conversation
-func ReplyConversation(ctx context.Context, clientConfig ClientConfig, params ReplyConversationParams, opts ...RequestOption) (*Conversation, error) {
-	conversationId := params.ConversationId
-	intercomVersion := params.IntercomVersion
-	body := params.Body
-
-	resp, err := DoCfg[Conversation](ctx, &clientConfig, "POST", fmt.Sprintf("/conversations/%s/reply", EncodePathSegment(conversationId)), &RequestOpts{
-		Body: body,
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "ReplyConversation",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "403": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
+	*value = CreateConversationResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
 	}
-	return &resp.Data, nil
-}
-
-type ManageConversationParams struct {
-	ConversationId  string
-	IntercomVersion *IntercomVersion
-	Body            *any
-}
-
-// ManageConversation changes a conversation's state or assignment by closing, snoozing, opening, or assigning it to an admin or team. Choose the request variant for the action and provide its required fields, such as `snoozed_until` when snoozing. Use the reply operation to send a comment, note, or quick reply instead.
-//
-// For managing conversations you can: - Close a conversation - Snooze a conversation to reopen on a future date - Open a conversation which is `snoozed` or `closed` - Assign a conversation to an admin and/or team. {% admonition type="info" name="Sending messages" %} To send a comment, note or quick reply, use Reply to a conversation. {% /admonition %}
-//
-// Parameters:
-//
-//	conversationId: The identifier for the conversation as given by Intercom.
-func ManageConversation(ctx context.Context, clientConfig ClientConfig, params ManageConversationParams, opts ...RequestOption) (*Conversation, error) {
-	conversationId := params.ConversationId
-	intercomVersion := params.IntercomVersion
-	body := params.Body
-
-	resp, err := DoCfg[Conversation](ctx, &clientConfig, "POST", fmt.Sprintf("/conversations/%s/parts", EncodePathSegment(conversationId)), &RequestOpts{
-		Body: body,
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "ManageConversation",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "403": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
+	if err := ValidateRequired(rawFields, []string{"type", "id", "created_at", "body", "message_type", "conversation_id"}); err != nil {
+		return err
 	}
-	return &resp.Data, nil
-}
-
-type AttachConversationsContactParams struct {
-	ConversationId  string
-	IntercomVersion *IntercomVersion
-	AdminId         *string
-	Customer        *AttachContactToConversationRequestCustomer
-}
-
-// AttachConversationsContact adds a contact as a participant in a conversation on behalf of an admin or another contact. Identify the contact using an Intercom user ID, a user ID, or an email address in `customer`. If no contact exists for a supplied email address, the API creates a contact with the `lead` role.
-//
-// You can add participants who are contacts to a conversation, on behalf of either another contact or an admin. {% admonition type="warning" name="Contacts without an email" %} If you add a contact via the email parameter and there is no user/lead found on that workspace with he given email, then we will create a new contact with `role` set to `lead`. {% /admonition %}
-//
-// Parameters:
-//
-//	conversationId: The identifier for the conversation as given by Intercom.
-//	adminId: The `id` of the admin who is adding the new participant.
-//	customer: Optional object value serialized in the `customer` wire field.
-func AttachConversationsContact(ctx context.Context, clientConfig ClientConfig, params AttachConversationsContactParams, opts ...RequestOption) (*ConversationParticipantsResponse, error) {
-	conversationId := params.ConversationId
-	intercomVersion := params.IntercomVersion
-	adminId := params.AdminId
-	customer := params.Customer
-
-	resp, err := DoCfg[ConversationParticipantsResponse](ctx, &clientConfig, "POST", fmt.Sprintf("/conversations/%s/customers", EncodePathSegment(conversationId)), &RequestOpts{
-		Body: map[string]any{
-			"admin_id": adminId,
-			"customer": customer,
-		},
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "AttachConversationsContact",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "403": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
+	if err := ValidateNotNull(rawFields, []string{"type", "id", "created_at", "body", "message_type", "conversation_id"}); err != nil {
+		return err
 	}
-	return &resp.Data, nil
+	return nil
 }
 
-type DetachConversationsContactParams struct {
-	ConversationId  string
-	ContactId       string
-	AdminId         string
-	IntercomVersion *IntercomVersion
+// NewCreateConversationResponse returns a validated CreateConversationResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCreateConversationResponse(fields CreateConversationResponse) (*CreateConversationResponse, error) {
+	return ConstructModel(fields)
 }
 
-// DetachConversationsContact removes a contact from a group conversation on behalf of an admin. Supply the conversation and contact identifiers and the performing admin's ID. You cannot remove the last remaining contact from a conversation.
-//
-// You can remove participants who are contacts from a group conversation, on behalf of an admin. {% admonition type="warning" name="Removing the last participant" %} You cannot remove the last remaining contact from a conversation. {% /admonition %}
-//
-// Parameters:
-//
-//	conversationId: The identifier for the conversation as given by Intercom.
-//	contactId: The identifier for the contact as given by Intercom.
-//	adminId: The `id` of the admin who is performing the action.
-func DetachConversationsContact(ctx context.Context, clientConfig ClientConfig, params DetachConversationsContactParams, opts ...RequestOption) (*ConversationParticipantsResponse, error) {
-	conversationId := params.ConversationId
-	contactId := params.ContactId
-	adminId := params.AdminId
-	intercomVersion := params.IntercomVersion
+// CreateConversationResponseMessageTypeEnum The type of message that was sent. Can be email, inapp, facebook or twitter.
+type CreateConversationResponseMessageTypeEnum string
 
-	resp, err := DoCfg[ConversationParticipantsResponse](ctx, &clientConfig, "DELETE", fmt.Sprintf("/conversations/%s/customers/%s", EncodePathSegment(conversationId), EncodePathSegment(contactId)), &RequestOpts{
-		Body: map[string]any{
-			"admin_id": adminId,
-		},
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "DetachConversationsContact",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "403": decodeErrorData[Error2], "404": decodeErrorData[Error2], "422": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type ListHandlingEventsParams struct {
-	Id              string
-	IntercomVersion *IntercomVersion
-}
-
-// ListHandlingEvents lists pause and resume handling events for a conversation, including the teammate and timestamp for each event. Use this operation when you need to review when teammates paused or resumed handling. Access requires the `read_conversations` OAuth scope.
-//
-// List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation. Requires the `read_conversations` OAuth scope.
-//
-// Parameters:
-//
-//	id: The identifier for the conversation as given by Intercom.
-func ListHandlingEvents(ctx context.Context, clientConfig ClientConfig, params ListHandlingEventsParams, opts ...RequestOption) (*HandlingEventList, error) {
-	id := params.Id
-	intercomVersion := params.IntercomVersion
-
-	resp, err := DoCfg[HandlingEventList](ctx, &clientConfig, "GET", fmt.Sprintf("/conversations/%s/handling_events", EncodePathSegment(id)), &RequestOpts{
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "ListHandlingEvents",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type ListHitlEventsParams struct {
-	Id              string
-	IntercomVersion *IntercomVersion
-}
-
-// ListHitlEvents lists human-in-the-loop events from Fin consultations on a conversation, ordered from oldest to newest. Use the events to review consultation steps and their associated data; a consultation appears only after it has ended. Access requires the `read_conversations` OAuth scope and permission to access the conversation.
-//
-// List the human-in-the-loop (HITL) events for a conversation. When Fin is unsure of an answer it can consult a teammate before replying, proposing a draft that the teammate approves, steers with free-text feedback, or takes over. Each consultation is returned as a series of events, oldest first, across every consultation on the conversation. Requires the `read_conversations` OAuth scope, and the caller must be able to access the conversation. Events are only recorded once a consultation has ended, so a consultation still awaiting a teammate does not appear. Which fields appear in `data` depends on `event_type`: | `event_type` | `data` fields | |---|---| | `fin_consultation_started` | `channel`, `rule_threshold_percent`, `confidence_percent`, `sharp_ask`, `ask_rationale`, `issue_summary`, `customer_question` | | `fin_draft_proposed` | `draft` | | `fin_teammate_input_received` | `round_index`, `teammate_input`, `reviewer_admin_id`, `regeneration_outcome` | | `fin_draft_revised` | `round_index`, `revised_draft`, `regeneration_outcome` | | `fin_consultation_finished` | `outcome`, `approved_draft_type`, `final_draft`, `sent_text`, `reviewer_admin_id`, `duration_seconds`, `rounds_count`, `payload_truncated` | A consultation always produces a `fin_consultation_started` and a `fin_consultation_finished` event. `fin_draft_proposed` appears when Fin proposed a draft. `fin_teammate_input_received` appears once per round of teammate feedback, and `fin_draft_revised` once per round where Fin produced a revised draft in response. Notes on interpreting the response: - `hitl_cycle_id` identifies the consultation, so it is the same on every event of one consultation. It is not unique per event. A conversation can hold several consultations — a consultation that replaces an outstanding one finishes with an `outcome` of `superseded`. - `conversation_part_id` links an event to a conversation part where one exists. It is `null` in ordinary cases: teammate feedback given through the…
-//
-// Parameters:
-//
-//	id: The identifier for the conversation as given by Intercom.
-func ListHitlEvents(ctx context.Context, clientConfig ClientConfig, params ListHitlEventsParams, opts ...RequestOption) (*HitlEventList, error) {
-	id := params.Id
-	intercomVersion := params.IntercomVersion
-
-	resp, err := DoCfg[HitlEventList](ctx, &clientConfig, "GET", fmt.Sprintf("/conversations/%s/hitl_events", EncodePathSegment(id)), &RequestOpts{
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "ListHitlEvents",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type ListSideConversationsParams struct {
-	Id              string
-	Page            *int64
-	PerPage         *int64
-	IntercomVersion *IntercomVersion
-}
-
-// ListSideConversations lists internal side conversations and their conversation parts for a given conversation. Use `page` and `per_page` to paginate the results. Access requires the `read_conversations` OAuth scope.
-//
-// List side conversations for a given conversation. Side conversations are internal threads created by teammates from within a conversation. Each side conversation includes its conversation parts (messages). Results are paginated. Requires the `read_conversations` OAuth scope.
-//
-// Parameters:
-//
-//	id: The identifier for the conversation as given by Intercom.
-//	page: The page number of results to return (starting from 1).
-//	perPage: The number of side conversations to return per page (max 50).
-func ListSideConversations(ctx context.Context, clientConfig ClientConfig, params ListSideConversationsParams, opts ...RequestOption) (*SideConversationList, error) {
-	id := params.Id
-	page := params.Page
-	perPage := params.PerPage
-	intercomVersion := params.IntercomVersion
-
-	if perPage != nil {
-		if err := ValidateRange("per_page", *perPage, RangeOpts{Max: Ptr[float64](50)}); err != nil {
-			return nil, err
-		}
-	}
-
-	resp, err := DoCfg[SideConversationList](ctx, &clientConfig, "GET", fmt.Sprintf("/conversations/%s/side_conversations", EncodePathSegment(id)), &RequestOpts{
-		Query: map[string]any{
-			"page":     QueryValue{Value: page, Style: "form", Explode: true},
-			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
-		},
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "ListSideConversations",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type RedactConversationParams struct {
-	IntercomVersion *IntercomVersion
-	Body            *RedactConversationRequest
-}
-
-// RedactConversation redacts a conversation part or the source message of a conversation. Choose the resource type and provide its identifiers; a conversation part must have a body, and a source message must have been created by a contact. Redacting a conversation also removes the associated HITL event data.
-//
-// You can redact a conversation part or the source message of a conversation (as seen in the source object). {% admonition type="info" name="Redacting parts and messages" %} If you are redacting a conversation part, it must have a `body`. If you are redacting a source message, it must have been created by a contact. We will return a `conversation_part_not_redactable` error if these criteria are not met. {% /admonition %}
-func RedactConversation(ctx context.Context, clientConfig ClientConfig, params RedactConversationParams, opts ...RequestOption) (*Conversation, error) {
-	intercomVersion := params.IntercomVersion
-	body := params.Body
-
-	resp, err := DoCfg[Conversation](ctx, &clientConfig, "POST", "/conversations/redact", &RequestOpts{
-		Body: body,
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "RedactConversation",
-		Errors:      ErrorDecoders{"401": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type MergeConversationParams struct {
-	Id                      string
-	MergeIntoConversationId int64
-	IntercomVersion         *IntercomVersion
-}
-
-// MergeConversation merges a secondary conversation into a primary conversation, closing the secondary and linking it to the surviving primary thread. Supply the secondary conversation ID in the path and the primary conversation ID in `merge_into_conversation_id`; the merge requires `write_conversations`, and also `write_tickets` when the secondary conversation is a ticket. The response contains the primary conversation.
-//
-// Merge a secondary (source) conversation into a primary (target) conversation. The secondary conversation is closed and linked to the primary, which becomes the surviving thread. Returns the primary conversation on success. Requires `write_conversations` OAuth scope. When the secondary is a ticket, `write_tickets` scope is also required.
-//
-// Parameters:
-//
-//	id: The identifier for the secondary (source) conversation to merge away.
-//	mergeIntoConversationId: The ID of the primary (target) conversation to
-//	merge into.
-func MergeConversation(ctx context.Context, clientConfig ClientConfig, params MergeConversationParams, opts ...RequestOption) (*Conversation, error) {
-	id := params.Id
-	mergeIntoConversationId := params.MergeIntoConversationId
-	intercomVersion := params.IntercomVersion
-
-	resp, err := DoCfg[Conversation](ctx, &clientConfig, "POST", fmt.Sprintf("/conversations/%s/merge", EncodePathSegment(id)), &RequestOpts{
-		Body: map[string]any{
-			"merge_into_conversation_id": mergeIntoConversationId,
-		},
-		Headers: OperationHeaders(map[string]any{
-			"Intercom-Version": intercomVersion,
-		}),
-		OperationID: "MergeConversation",
-		Errors:      ErrorDecoders{"400": decodeErrorData[Error2], "401": decodeErrorData[Error2], "403": decodeErrorData[Error2], "422": decodeErrorData[Error2]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type ConvertConversationToTicketParams struct {
-	ConversationId  int64
-	TicketTypeId    string
-	IntercomVersion *IntercomVersion
-	TicketStateId   *string
-	Attributes      *TicketRequestCustomAttributes
-}
+const (
+	CreateConversationResponseMessageTypeEnumEmail    CreateConversationResponseMessageTypeEnum = "email"
+	CreateConversationResponseMessageTypeEnumInapp    CreateConversationResponseMessageTypeEnum = "inapp"
+	CreateConversationResponseMessageTypeEnumFacebook CreateConversationResponseMessageTypeEnum = "facebook"
+	CreateConversationResponseMessageTypeEnumTwitter  CreateConversationResponseMessageTypeEnum = "twitter"
+)
