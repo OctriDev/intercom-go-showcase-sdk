@@ -8,36 +8,6 @@ import (
 	"fmt"
 )
 
-// CreateTicketAssignment Optional object value serialized in the `assignment` wire field.
-type CreateTicketAssignment struct {
-	// AdminAssigneeId The ID of the admin to which the ticket is assigned. If not provided, the ticket will be unassigned.
-	AdminAssigneeId *string `json:"admin_assignee_id,omitempty"`
-	// TeamAssigneeId The ID of the team to which the ticket is assigned. If not provided, the ticket will be unassigned.
-	TeamAssigneeId *string `json:"team_assignee_id,omitempty"`
-}
-
-// NewCreateTicketAssignment returns a validated CreateTicketAssignment built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCreateTicketAssignment(fields CreateTicketAssignment) (*CreateTicketAssignment, error) {
-	return ConstructModel(fields)
-}
-
-// EnqueueCreateTicketAssignment Optional object value serialized in the `assignment` wire field.
-type EnqueueCreateTicketAssignment struct {
-	// AdminAssigneeId The ID of the admin to which the ticket is assigned. If not provided, the ticket will be unassigned.
-	AdminAssigneeId *string `json:"admin_assignee_id,omitempty"`
-	// TeamAssigneeId The ID of the team to which the ticket is assigned. If not provided, the ticket will be unassigned.
-	TeamAssigneeId *string `json:"team_assignee_id,omitempty"`
-}
-
-// NewEnqueueCreateTicketAssignment returns a validated EnqueueCreateTicketAssignment built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewEnqueueCreateTicketAssignment(fields EnqueueCreateTicketAssignment) (*EnqueueCreateTicketAssignment, error) {
-	return ConstructModel(fields)
-}
-
 type ReplyTicketParams struct {
 	TicketId          string
 	IntercomVersion   *IntercomVersion
@@ -112,13 +82,13 @@ func LinkTicketsConversation(ctx context.Context, clientConfig ClientConfig, par
 	return &resp.Data, nil
 }
 
-type UnlinkTicketsConversationParams struct {
+type UnlinkTicketConversationParams struct {
 	TicketId        string
 	Id              string
 	IntercomVersion *IntercomVersion
 }
 
-// UnlinkTicketsConversation unlinks a conversation or converted customer ticket from the tracker ticket it is linked to. Supply the tracker ticket identifier and the identifier of the linked conversation or customer ticket. This operation requires the `write_tickets` OAuth scope.
+// UnlinkTicketConversation unlinks a conversation or converted customer ticket from the tracker ticket it is linked to. Supply the tracker ticket identifier and the identifier of the linked conversation or customer ticket. This operation requires the `write_tickets` OAuth scope.
 //
 // Unlink a conversation (or converted customer ticket) from a tracker ticket it is currently linked to. The ticket in the path must be a tracker ticket. This returns the conversation that was unlinked. Requires the `write_tickets` OAuth scope.
 //
@@ -128,7 +98,7 @@ type UnlinkTicketsConversationParams struct {
 //	Intercom.
 //	id: The unique identifier (given by Intercom) for the linked conversation or
 //	customer ticket to unlink.
-func UnlinkTicketsConversation(ctx context.Context, clientConfig ClientConfig, params UnlinkTicketsConversationParams, opts ...RequestOption) (*Conversation, error) {
+func UnlinkTicketConversation(ctx context.Context, clientConfig ClientConfig, params UnlinkTicketConversationParams, opts ...RequestOption) (*Conversation, error) {
 	ticketId := params.TicketId
 	id := params.Id
 	intercomVersion := params.IntercomVersion
@@ -137,7 +107,7 @@ func UnlinkTicketsConversation(ctx context.Context, clientConfig ClientConfig, p
 		Headers: OperationHeaders(map[string]any{
 			"Intercom-Version": intercomVersion,
 		}),
-		OperationID: "UnlinkTicketsConversation",
+		OperationID: "UnlinkTicketConversation",
 		Errors:      ErrorDecoders{"400": decodeErrorData[Error2], "401": decodeErrorData[Error2], "404": decodeErrorData[Error2]},
 		Options:     opts,
 	})
@@ -533,4 +503,34 @@ func SearchTickets(ctx context.Context, clientConfig ClientConfig, params Search
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// CreateTicketAssignment Optional object value serialized in the `assignment` wire field.
+type CreateTicketAssignment struct {
+	// AdminAssigneeId The ID of the admin to which the ticket is assigned. If not provided, the ticket will be unassigned.
+	AdminAssigneeId *string `json:"admin_assignee_id,omitempty"`
+	// TeamAssigneeId The ID of the team to which the ticket is assigned. If not provided, the ticket will be unassigned.
+	TeamAssigneeId *string `json:"team_assignee_id,omitempty"`
+}
+
+// NewCreateTicketAssignment returns a validated CreateTicketAssignment built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCreateTicketAssignment(fields CreateTicketAssignment) (*CreateTicketAssignment, error) {
+	return ConstructModel(fields)
+}
+
+// EnqueueCreateTicketAssignment Optional object value serialized in the `assignment` wire field.
+type EnqueueCreateTicketAssignment struct {
+	// AdminAssigneeId The ID of the admin to which the ticket is assigned. If not provided, the ticket will be unassigned.
+	AdminAssigneeId *string `json:"admin_assignee_id,omitempty"`
+	// TeamAssigneeId The ID of the team to which the ticket is assigned. If not provided, the ticket will be unassigned.
+	TeamAssigneeId *string `json:"team_assignee_id,omitempty"`
+}
+
+// NewEnqueueCreateTicketAssignment returns a validated EnqueueCreateTicketAssignment built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewEnqueueCreateTicketAssignment(fields EnqueueCreateTicketAssignment) (*EnqueueCreateTicketAssignment, error) {
+	return ConstructModel(fields)
 }

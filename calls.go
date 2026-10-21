@@ -10,114 +10,6 @@ import (
 	"fmt"
 )
 
-type ListCallsWithTranscriptsResponse struct {
-	Type *string                                `json:"type,omitempty"`
-	Data []ListCallsWithTranscriptsResponseData `json:"data,omitempty"`
-}
-
-// NewListCallsWithTranscriptsResponse returns a validated ListCallsWithTranscriptsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListCallsWithTranscriptsResponse(fields ListCallsWithTranscriptsResponse) (*ListCallsWithTranscriptsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type ListCallsWithTranscriptsResponseData struct {
-	// Type String representing the object's type. Always has the value `call`.
-	Type *string `json:"type,omitempty"`
-	// Id The id of the call.
-	Id *string `json:"id,omitempty"`
-	// ConversationId The id of the conversation associated with the call, if any.
-	ConversationId *NullableValue[string] `json:"conversation_id,omitempty"`
-	// AdminId The id of the admin associated with the call, if any.
-	AdminId *NullableValue[string] `json:"admin_id,omitempty"`
-	// ContactId The id of the contact associated with the call, if any.
-	ContactId *NullableValue[string] `json:"contact_id,omitempty"`
-	// State The current state of the call.
-	State *string `json:"state,omitempty"`
-	// InitiatedAt Optional API value serialized in the `initiated_at` wire field.
-	InitiatedAt *Datetime `json:"initiated_at,omitempty"`
-	// AnsweredAt Optional API value serialized in the `answered_at` wire field.
-	AnsweredAt *Datetime `json:"answered_at,omitempty"`
-	// EndedAt Optional API value serialized in the `ended_at` wire field.
-	EndedAt *Datetime `json:"ended_at,omitempty"`
-	// CreatedAt Optional API value serialized in the `created_at` wire field.
-	CreatedAt *Datetime `json:"created_at,omitempty"`
-	// UpdatedAt Optional API value serialized in the `updated_at` wire field.
-	UpdatedAt *Datetime `json:"updated_at,omitempty"`
-	// RecordingUrl API URL to download or redirect to the call recording if available.
-	RecordingUrl *NullableValue[string] `json:"recording_url,omitempty"`
-	// TranscriptionUrl API URL to download or redirect to the call transcript if available.
-	TranscriptionUrl *NullableValue[string] `json:"transcription_url,omitempty"`
-	// CallType The type of call.
-	CallType *string `json:"call_type,omitempty"`
-	// Direction The direction of the call.
-	Direction *string `json:"direction,omitempty"`
-	// EndedReason The reason for the call end, if applicable.
-	EndedReason *NullableValue[string] `json:"ended_reason,omitempty"`
-	// Phone The phone number involved in the call, in E.164 format.
-	Phone *NullableValue[string] `json:"phone,omitempty"`
-	// FinRecordingUrl API URL to the AI Agent (Fin) call recording if available.
-	FinRecordingUrl *NullableValue[string] `json:"fin_recording_url,omitempty"`
-	// FinTranscriptionUrl API URL to the AI Agent (Fin) call transcript if available.
-	FinTranscriptionUrl *NullableValue[string] `json:"fin_transcription_url,omitempty"`
-	// Transcript The call transcript if available, otherwise an empty array.
-	Transcript []map[string]any `json:"transcript,omitempty"`
-	// TranscriptStatus The status of the transcript if available.
-	TranscriptStatus *NullableValue[string] `json:"transcript_status,omitempty"`
-}
-
-func (value *ListCallsWithTranscriptsResponseData) UnmarshalJSON(data []byte) error {
-	type ListCallsWithTranscriptsResponseDataAlias ListCallsWithTranscriptsResponseData
-	var decoded ListCallsWithTranscriptsResponseDataAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = ListCallsWithTranscriptsResponseData(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["conversation_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.ConversationId = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["admin_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.AdminId = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["contact_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.ContactId = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["recording_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.RecordingUrl = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["transcription_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.TranscriptionUrl = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["ended_reason"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.EndedReason = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["phone"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Phone = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["fin_recording_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.FinRecordingUrl = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["fin_transcription_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.FinTranscriptionUrl = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["transcript_status"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.TranscriptStatus = &NullableValue[string]{}
-	}
-	return nil
-}
-
-// NewListCallsWithTranscriptsResponseData returns a validated ListCallsWithTranscriptsResponseData built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListCallsWithTranscriptsResponseData(fields ListCallsWithTranscriptsResponseData) (*ListCallsWithTranscriptsResponseData, error) {
-	return ConstructModel(fields)
-}
-
 type ListCallsParams struct {
 	Page            *int64
 	PerPage         *int64
@@ -411,4 +303,112 @@ func CollectFinVoiceCallsByConversationId(ctx context.Context, clientConfig Clie
 		return nil, err
 	}
 	return resp.Data, nil
+}
+
+type ListCallsWithTranscriptsResponse struct {
+	Type *string                                `json:"type,omitempty"`
+	Data []ListCallsWithTranscriptsResponseData `json:"data,omitempty"`
+}
+
+// NewListCallsWithTranscriptsResponse returns a validated ListCallsWithTranscriptsResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListCallsWithTranscriptsResponse(fields ListCallsWithTranscriptsResponse) (*ListCallsWithTranscriptsResponse, error) {
+	return ConstructModel(fields)
+}
+
+type ListCallsWithTranscriptsResponseData struct {
+	// Type String representing the object's type. Always has the value `call`.
+	Type *string `json:"type,omitempty"`
+	// Id The id of the call.
+	Id *string `json:"id,omitempty"`
+	// ConversationId The id of the conversation associated with the call, if any.
+	ConversationId *NullableValue[string] `json:"conversation_id,omitempty"`
+	// AdminId The id of the admin associated with the call, if any.
+	AdminId *NullableValue[string] `json:"admin_id,omitempty"`
+	// ContactId The id of the contact associated with the call, if any.
+	ContactId *NullableValue[string] `json:"contact_id,omitempty"`
+	// State The current state of the call.
+	State *string `json:"state,omitempty"`
+	// InitiatedAt Optional API value serialized in the `initiated_at` wire field.
+	InitiatedAt *Datetime `json:"initiated_at,omitempty"`
+	// AnsweredAt Optional API value serialized in the `answered_at` wire field.
+	AnsweredAt *Datetime `json:"answered_at,omitempty"`
+	// EndedAt Optional API value serialized in the `ended_at` wire field.
+	EndedAt *Datetime `json:"ended_at,omitempty"`
+	// CreatedAt Optional API value serialized in the `created_at` wire field.
+	CreatedAt *Datetime `json:"created_at,omitempty"`
+	// UpdatedAt Optional API value serialized in the `updated_at` wire field.
+	UpdatedAt *Datetime `json:"updated_at,omitempty"`
+	// RecordingUrl API URL to download or redirect to the call recording if available.
+	RecordingUrl *NullableValue[string] `json:"recording_url,omitempty"`
+	// TranscriptionUrl API URL to download or redirect to the call transcript if available.
+	TranscriptionUrl *NullableValue[string] `json:"transcription_url,omitempty"`
+	// CallType The type of call.
+	CallType *string `json:"call_type,omitempty"`
+	// Direction The direction of the call.
+	Direction *string `json:"direction,omitempty"`
+	// EndedReason The reason for the call end, if applicable.
+	EndedReason *NullableValue[string] `json:"ended_reason,omitempty"`
+	// Phone The phone number involved in the call, in E.164 format.
+	Phone *NullableValue[string] `json:"phone,omitempty"`
+	// FinRecordingUrl API URL to the AI Agent (Fin) call recording if available.
+	FinRecordingUrl *NullableValue[string] `json:"fin_recording_url,omitempty"`
+	// FinTranscriptionUrl API URL to the AI Agent (Fin) call transcript if available.
+	FinTranscriptionUrl *NullableValue[string] `json:"fin_transcription_url,omitempty"`
+	// Transcript The call transcript if available, otherwise an empty array.
+	Transcript []map[string]any `json:"transcript,omitempty"`
+	// TranscriptStatus The status of the transcript if available.
+	TranscriptStatus *NullableValue[string] `json:"transcript_status,omitempty"`
+}
+
+func (value *ListCallsWithTranscriptsResponseData) UnmarshalJSON(data []byte) error {
+	type ListCallsWithTranscriptsResponseDataAlias ListCallsWithTranscriptsResponseData
+	var decoded ListCallsWithTranscriptsResponseDataAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = ListCallsWithTranscriptsResponseData(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if raw, ok := rawFields["conversation_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.ConversationId = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["admin_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.AdminId = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["contact_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.ContactId = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["recording_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.RecordingUrl = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["transcription_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.TranscriptionUrl = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["ended_reason"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.EndedReason = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["phone"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.Phone = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["fin_recording_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.FinRecordingUrl = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["fin_transcription_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.FinTranscriptionUrl = &NullableValue[string]{}
+	}
+	if raw, ok := rawFields["transcript_status"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.TranscriptStatus = &NullableValue[string]{}
+	}
+	return nil
+}
+
+// NewListCallsWithTranscriptsResponseData returns a validated ListCallsWithTranscriptsResponseData built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListCallsWithTranscriptsResponseData(fields ListCallsWithTranscriptsResponseData) (*ListCallsWithTranscriptsResponseData, error) {
+	return ConstructModel(fields)
 }

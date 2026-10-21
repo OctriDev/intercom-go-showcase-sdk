@@ -9,334 +9,6 @@ import (
 	"fmt"
 )
 
-type StartFinConversationResponse struct {
-	// ConversationId The ID of the conversation.
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
-	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
-	// UserId The ID of the user.
-	UserId *string `json:"user_id,omitempty"`
-	// Status Fin's current status in the conversation workflow.
-	Status *StartFinConversationResponseStatusEnum `json:"status,omitempty"`
-	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
-	CreatedAtMs *string `json:"created_at_ms,omitempty"`
-	// Errors Contains error details if any user or conversation attribute updates failed.
-	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
-	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to awaiting_user_reply or complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
-	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
-}
-
-func (value *StartFinConversationResponse) UnmarshalJSON(data []byte) error {
-	type StartFinConversationResponseAlias StartFinConversationResponse
-	var decoded StartFinConversationResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = StartFinConversationResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if value.CreatedAtMs != nil {
-		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewStartFinConversationResponse returns a validated StartFinConversationResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewStartFinConversationResponse(fields StartFinConversationResponse) (*StartFinConversationResponse, error) {
-	return ConstructModel(fields)
-}
-
-// StartFinConversationResponseStatusEnum Fin's current status in the conversation workflow.
-type StartFinConversationResponseStatusEnum string
-
-const (
-	StartFinConversationResponseStatusEnumThinking          StartFinConversationResponseStatusEnum = "thinking"
-	StartFinConversationResponseStatusEnumReplying          StartFinConversationResponseStatusEnum = "replying"
-	StartFinConversationResponseStatusEnumAwaitingUserReply StartFinConversationResponseStatusEnum = "awaiting_user_reply"
-	StartFinConversationResponseStatusEnumEscalated         StartFinConversationResponseStatusEnum = "escalated"
-	StartFinConversationResponseStatusEnumResolved          StartFinConversationResponseStatusEnum = "resolved"
-	StartFinConversationResponseStatusEnumComplete          StartFinConversationResponseStatusEnum = "complete"
-)
-
-type ReplyToFinResponse struct {
-	// ConversationId The ID of the conversation.
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
-	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
-	// UserId The ID of the user.
-	UserId *string `json:"user_id,omitempty"`
-	// Status Fin's current status in the conversation workflow.
-	Status *ReplyToFinResponseStatusEnum `json:"status,omitempty"`
-	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
-	CreatedAtMs *string `json:"created_at_ms,omitempty"`
-	// Errors Contains error details if any user or conversation attribute updates failed.
-	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
-	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to awaiting_user_reply or complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
-	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
-}
-
-func (value *ReplyToFinResponse) UnmarshalJSON(data []byte) error {
-	type ReplyToFinResponseAlias ReplyToFinResponse
-	var decoded ReplyToFinResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = ReplyToFinResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if value.CreatedAtMs != nil {
-		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewReplyToFinResponse returns a validated ReplyToFinResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewReplyToFinResponse(fields ReplyToFinResponse) (*ReplyToFinResponse, error) {
-	return ConstructModel(fields)
-}
-
-// ReplyToFinResponseStatusEnum Fin's current status in the conversation workflow.
-type ReplyToFinResponseStatusEnum string
-
-const (
-	ReplyToFinResponseStatusEnumThinking          ReplyToFinResponseStatusEnum = "thinking"
-	ReplyToFinResponseStatusEnumReplying          ReplyToFinResponseStatusEnum = "replying"
-	ReplyToFinResponseStatusEnumAwaitingUserReply ReplyToFinResponseStatusEnum = "awaiting_user_reply"
-	ReplyToFinResponseStatusEnumEscalated         ReplyToFinResponseStatusEnum = "escalated"
-	ReplyToFinResponseStatusEnumResolved          ReplyToFinResponseStatusEnum = "resolved"
-	ReplyToFinResponseStatusEnumComplete          ReplyToFinResponseStatusEnum = "complete"
-)
-
-type SubmitFinCsatResponse struct {
-	// ConversationId The external ID of the rated conversation.
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// Rating The rating now recorded on the conversation.
-	Rating *SubmitFinCsatResponseRatingEnum `json:"rating,omitempty"`
-	// Status The result of the submission.
-	Status *SubmitFinCsatResponseStatusEnum `json:"status,omitempty"`
-}
-
-// NewSubmitFinCsatResponse returns a validated SubmitFinCsatResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSubmitFinCsatResponse(fields SubmitFinCsatResponse) (*SubmitFinCsatResponse, error) {
-	return ConstructModel(fields)
-}
-
-// SubmitFinCsatResponseRatingEnum The rating now recorded on the conversation.
-type SubmitFinCsatResponseRatingEnum string
-
-const (
-	SubmitFinCsatResponseRatingEnumTerrible SubmitFinCsatResponseRatingEnum = "terrible"
-	SubmitFinCsatResponseRatingEnumBad      SubmitFinCsatResponseRatingEnum = "bad"
-	SubmitFinCsatResponseRatingEnumOk       SubmitFinCsatResponseRatingEnum = "ok"
-	SubmitFinCsatResponseRatingEnumGood     SubmitFinCsatResponseRatingEnum = "good"
-	SubmitFinCsatResponseRatingEnumAmazing  SubmitFinCsatResponseRatingEnum = "amazing"
-)
-
-// SubmitFinCsatResponseStatusEnum The result of the submission.
-type SubmitFinCsatResponseStatusEnum string
-
-const (
-	SubmitFinCsatResponseStatusEnumRated SubmitFinCsatResponseStatusEnum = "rated"
-)
-
-type ListFinCapabilitiesResponse struct {
-	// Version The API version the capabilities document was generated for.
-	Version *string `json:"version,omitempty"`
-	// Capabilities The list of capabilities available to this user.
-	Capabilities []ListFinCapabilitiesResponseCapabilities `json:"capabilities,omitempty"`
-}
-
-// NewListFinCapabilitiesResponse returns a validated ListFinCapabilitiesResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListFinCapabilitiesResponse(fields ListFinCapabilitiesResponse) (*ListFinCapabilitiesResponse, error) {
-	return ConstructModel(fields)
-}
-
-type ListFinCapabilitiesResponseCapabilities struct {
-	// Type The kind of capability — `procedure` for a runnable procedure, or a static action such as `reply`, `ask`, or `escalate`.
-	Type *string `json:"type,omitempty"`
-	// Id The procedure ID. Present only when `type` is `procedure`.
-	Id *string `json:"id,omitempty"`
-	// Name The procedure name. Present only when `type` is `procedure`.
-	Name *string `json:"name,omitempty"`
-	// Description A human-readable description of the capability.
-	Description *string `json:"description,omitempty"`
-	// Endpoint The endpoint path to call to use this capability.
-	Endpoint *string `json:"endpoint,omitempty"`
-	// Method The HTTP method to use.
-	Method *string `json:"method,omitempty"`
-}
-
-// NewListFinCapabilitiesResponseCapabilities returns a validated ListFinCapabilitiesResponseCapabilities built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListFinCapabilitiesResponseCapabilities(fields ListFinCapabilitiesResponseCapabilities) (*ListFinCapabilitiesResponseCapabilities, error) {
-	return ConstructModel(fields)
-}
-
-type AskFinResponse struct {
-	// ConversationId The external ID of the conversation.
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
-	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
-	// UserId The ID of the user.
-	UserId *string `json:"user_id,omitempty"`
-	// Status Fin's current status in the conversation workflow.
-	Status *AskFinResponseStatusEnum `json:"status,omitempty"`
-	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
-	CreatedAtMs *string `json:"created_at_ms,omitempty"`
-	// Errors Contains error details if any user or conversation attribute updates failed.
-	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
-	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
-	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
-}
-
-func (value *AskFinResponse) UnmarshalJSON(data []byte) error {
-	type AskFinResponseAlias AskFinResponse
-	var decoded AskFinResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = AskFinResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if value.CreatedAtMs != nil {
-		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewAskFinResponse returns a validated AskFinResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewAskFinResponse(fields AskFinResponse) (*AskFinResponse, error) {
-	return ConstructModel(fields)
-}
-
-// AskFinResponseStatusEnum Fin's current status in the conversation workflow.
-type AskFinResponseStatusEnum string
-
-const (
-	AskFinResponseStatusEnumThinking AskFinResponseStatusEnum = "thinking"
-	AskFinResponseStatusEnumReplying AskFinResponseStatusEnum = "replying"
-	AskFinResponseStatusEnumResolved AskFinResponseStatusEnum = "resolved"
-	AskFinResponseStatusEnumComplete AskFinResponseStatusEnum = "complete"
-)
-
-// RunFinProcedureConversationMetadata Metadata about the conversation. Only attributes are accepted (no history).
-type RunFinProcedureConversationMetadata struct {
-	// Attributes A hash of conversation attributes. Limit to 20 attributes.
-	Attributes map[string]any `json:"attributes,omitempty"`
-}
-
-// NewRunFinProcedureConversationMetadata returns a validated RunFinProcedureConversationMetadata built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRunFinProcedureConversationMetadata(fields RunFinProcedureConversationMetadata) (*RunFinProcedureConversationMetadata, error) {
-	return ConstructModel(fields)
-}
-
-type RunFinProcedureResponse struct {
-	// ConversationId The ID of the conversation.
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
-	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
-	// UserId The ID of the user.
-	UserId *string `json:"user_id,omitempty"`
-	// ProcedureId The ID of the procedure that was run.
-	ProcedureId *string `json:"procedure_id,omitempty"`
-	// Status Fin's current status in the conversation workflow.
-	Status *RunFinProcedureResponseStatusEnum `json:"status,omitempty"`
-	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
-	CreatedAtMs *string `json:"created_at_ms,omitempty"`
-	// Errors Contains error details if any user or conversation attribute updates failed.
-	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
-	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to awaiting_user_reply or complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
-	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
-}
-
-func (value *RunFinProcedureResponse) UnmarshalJSON(data []byte) error {
-	type RunFinProcedureResponseAlias RunFinProcedureResponse
-	var decoded RunFinProcedureResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RunFinProcedureResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if value.CreatedAtMs != nil {
-		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewRunFinProcedureResponse returns a validated RunFinProcedureResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRunFinProcedureResponse(fields RunFinProcedureResponse) (*RunFinProcedureResponse, error) {
-	return ConstructModel(fields)
-}
-
-// RunFinProcedureResponseStatusEnum Fin's current status in the conversation workflow.
-type RunFinProcedureResponseStatusEnum string
-
-const (
-	RunFinProcedureResponseStatusEnumThinking          RunFinProcedureResponseStatusEnum = "thinking"
-	RunFinProcedureResponseStatusEnumReplying          RunFinProcedureResponseStatusEnum = "replying"
-	RunFinProcedureResponseStatusEnumAwaitingUserReply RunFinProcedureResponseStatusEnum = "awaiting_user_reply"
-	RunFinProcedureResponseStatusEnumEscalated         RunFinProcedureResponseStatusEnum = "escalated"
-	RunFinProcedureResponseStatusEnumResolved          RunFinProcedureResponseStatusEnum = "resolved"
-	RunFinProcedureResponseStatusEnumComplete          RunFinProcedureResponseStatusEnum = "complete"
-)
-
-type EscalateFinConversationResponse struct {
-	// ConversationId The external ID of the conversation. Returned when you escalate an existing conversation by `conversation_id` (echoed back). When you escalate a `user`, a new conversation is created and only `intercom_conversation_id` is returned.
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// IntercomConversationId The internal Intercom conversation ID. Returned when a new conversation was created for the escalation.
-	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
-	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires. Includes a `rewind` window so a subscriber that connects after the escalation is processed can still receive the `escalated` and `complete` events.
-	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
-	// Status The resulting status of the conversation.
-	Status *EscalateFinConversationResponseStatusEnum `json:"status,omitempty"`
-}
-
-// NewEscalateFinConversationResponse returns a validated EscalateFinConversationResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewEscalateFinConversationResponse(fields EscalateFinConversationResponse) (*EscalateFinConversationResponse, error) {
-	return ConstructModel(fields)
-}
-
-// EscalateFinConversationResponseStatusEnum The resulting status of the conversation.
-type EscalateFinConversationResponseStatusEnum string
-
-const (
-	EscalateFinConversationResponseStatusEnumEscalated EscalateFinConversationResponseStatusEnum = "escalated"
-)
-
 type StartFinConversationParams struct {
 	ConversationId       string
 	Message              FinAgentMessage
@@ -666,3 +338,379 @@ type EscalateFinConversationParams struct {
 	User            *FinAgentUser
 	Context         *string
 }
+
+// EscalateFinConversation escalates an existing Fin conversation or a user without a prior agent conversation to a human teammate. Provide either `conversation_id` or `user`; the conversation remains open after Fin signals that the handoff is complete.
+//
+// Hand a conversation off to a human teammate. If you use the Intercom Helpdesk, the handoff lands in your team inbox. Provide either `conversation_id` or `user`: - `conversation_id` — escalate an existing agent conversation, including one started with `/fin/ask`. On the Intercom Helpdesk, Fin by default summarises the conversation and opens a new Helpdesk conversation that carries the summary as an internal note. Escalation does not change the original agent conversation's assignment or open/closed state. Configure an escalation Operator Workflow to change this default. - `user` — escalate on behalf of a user with no prior agent conversation. On the Intercom Helpdesk, a new Helpdesk conversation is created for the teammate. Not supported on Fin for Platforms — see below. In both cases, pass the optional `context` to give the receiving teammate background your orchestrating agent has and Fin does not. On the Intercom Helpdesk, it appears above the summary in the internal note of the new conversation the teammate picks up. It is never shown to the end user. Escalating an existing conversation also sets its AI Agent resolution state to `escalated`, readable as `ai_agent.resolution_state` on the Conversations API. This is a resolution state, not a billable resolution. On Fin for Platforms, `conversation_id` is required — `user` is not supported and is rejected, because there is no Intercom Helpdesk in which to create a conversation. There is no Intercom inbox either, so an escalation that no workflow handles does not open a Helpdesk conversation for a teammate. `context` is not surfaced, and the conversation is left open for your platform to hand off and continue driving. You are notified over the existing webhook or SSE channel with an `escalated` status followed by `complete`. The `complete` status signals that Fin is done; it does not close the conversation. On the Intercom Helpdesk, the new human conversation remains open; on Fin for Platforms, the conversation…
+//
+// Parameters:
+//
+//	conversationId: The external ID of the conversation to escalate. Provide
+//	this or `user`. Required on Fin for Platforms, where `user` is not
+//	supported.
+//	user: The user to escalate on behalf of, creating a new conversation.
+//	Provide this or `conversation_id`. Not supported on Fin for Platforms.
+//	context_: Optional background for the receiving teammate, valid with either
+//	`conversation_id` or `user`. On the Intercom Helpdesk, it appears above the
+//	summary in the internal note of the new conversation the teammate picks up,
+//	and is never shown to the end user. Not surfaced on Fin for Platforms. Avoid
+//	including credentials or unnecessary personal data — it is visible to any
+//	teammate with access to the conversation.
+func EscalateFinConversation(ctx context.Context, clientConfig ClientConfig, params EscalateFinConversationParams, opts ...RequestOption) (*EscalateFinConversationResponse, error) {
+	intercomVersion := params.IntercomVersion
+	conversationId := params.ConversationId
+	user := params.User
+	context_ := params.Context
+
+	if context_ != nil {
+		if err := ValidateLength("context", *context_, LengthOpts{Max: Ptr[int](10000)}); err != nil {
+			return nil, err
+		}
+	}
+
+	resp, err := DoCfg[EscalateFinConversationResponse](ctx, &clientConfig, "POST", "/fin/escalate", &RequestOpts{
+		Body: map[string]any{
+			"conversation_id": conversationId,
+			"user":            user,
+			"context":         context_,
+		},
+		Headers: OperationHeaders(map[string]any{
+			"Intercom-Version": intercomVersion,
+		}),
+		OperationID: "EscalateFinConversation",
+		Errors:      ErrorDecoders{"400": decodeErrorData[Error2], "401": decodeErrorData[Error2]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type StartFinConversationResponse struct {
+	// ConversationId The ID of the conversation.
+	ConversationId *string `json:"conversation_id,omitempty"`
+	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
+	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
+	// UserId The ID of the user.
+	UserId *string `json:"user_id,omitempty"`
+	// Status Fin's current status in the conversation workflow.
+	Status *StartFinConversationResponseStatusEnum `json:"status,omitempty"`
+	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
+	CreatedAtMs *string `json:"created_at_ms,omitempty"`
+	// Errors Contains error details if any user or conversation attribute updates failed.
+	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
+	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to awaiting_user_reply or complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
+	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
+}
+
+func (value *StartFinConversationResponse) UnmarshalJSON(data []byte) error {
+	type StartFinConversationResponseAlias StartFinConversationResponse
+	var decoded StartFinConversationResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = StartFinConversationResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if value.CreatedAtMs != nil {
+		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewStartFinConversationResponse returns a validated StartFinConversationResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewStartFinConversationResponse(fields StartFinConversationResponse) (*StartFinConversationResponse, error) {
+	return ConstructModel(fields)
+}
+
+// StartFinConversationResponseStatusEnum Fin's current status in the conversation workflow.
+type StartFinConversationResponseStatusEnum string
+
+const (
+	StartFinConversationResponseStatusEnumThinking          StartFinConversationResponseStatusEnum = "thinking"
+	StartFinConversationResponseStatusEnumReplying          StartFinConversationResponseStatusEnum = "replying"
+	StartFinConversationResponseStatusEnumAwaitingUserReply StartFinConversationResponseStatusEnum = "awaiting_user_reply"
+	StartFinConversationResponseStatusEnumEscalated         StartFinConversationResponseStatusEnum = "escalated"
+	StartFinConversationResponseStatusEnumResolved          StartFinConversationResponseStatusEnum = "resolved"
+	StartFinConversationResponseStatusEnumComplete          StartFinConversationResponseStatusEnum = "complete"
+)
+
+type ReplyToFinResponse struct {
+	// ConversationId The ID of the conversation.
+	ConversationId *string `json:"conversation_id,omitempty"`
+	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
+	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
+	// UserId The ID of the user.
+	UserId *string `json:"user_id,omitempty"`
+	// Status Fin's current status in the conversation workflow.
+	Status *ReplyToFinResponseStatusEnum `json:"status,omitempty"`
+	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
+	CreatedAtMs *string `json:"created_at_ms,omitempty"`
+	// Errors Contains error details if any user or conversation attribute updates failed.
+	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
+	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to awaiting_user_reply or complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
+	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
+}
+
+func (value *ReplyToFinResponse) UnmarshalJSON(data []byte) error {
+	type ReplyToFinResponseAlias ReplyToFinResponse
+	var decoded ReplyToFinResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = ReplyToFinResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if value.CreatedAtMs != nil {
+		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewReplyToFinResponse returns a validated ReplyToFinResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewReplyToFinResponse(fields ReplyToFinResponse) (*ReplyToFinResponse, error) {
+	return ConstructModel(fields)
+}
+
+// ReplyToFinResponseStatusEnum Fin's current status in the conversation workflow.
+type ReplyToFinResponseStatusEnum string
+
+const (
+	ReplyToFinResponseStatusEnumThinking          ReplyToFinResponseStatusEnum = "thinking"
+	ReplyToFinResponseStatusEnumReplying          ReplyToFinResponseStatusEnum = "replying"
+	ReplyToFinResponseStatusEnumAwaitingUserReply ReplyToFinResponseStatusEnum = "awaiting_user_reply"
+	ReplyToFinResponseStatusEnumEscalated         ReplyToFinResponseStatusEnum = "escalated"
+	ReplyToFinResponseStatusEnumResolved          ReplyToFinResponseStatusEnum = "resolved"
+	ReplyToFinResponseStatusEnumComplete          ReplyToFinResponseStatusEnum = "complete"
+)
+
+type SubmitFinCsatResponse struct {
+	// ConversationId The external ID of the rated conversation.
+	ConversationId *string `json:"conversation_id,omitempty"`
+	// Rating The rating now recorded on the conversation.
+	Rating *SubmitFinCsatResponseRatingEnum `json:"rating,omitempty"`
+	// Status The result of the submission.
+	Status *SubmitFinCsatResponseStatusEnum `json:"status,omitempty"`
+}
+
+// NewSubmitFinCsatResponse returns a validated SubmitFinCsatResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSubmitFinCsatResponse(fields SubmitFinCsatResponse) (*SubmitFinCsatResponse, error) {
+	return ConstructModel(fields)
+}
+
+// SubmitFinCsatResponseRatingEnum The rating now recorded on the conversation.
+type SubmitFinCsatResponseRatingEnum string
+
+const (
+	SubmitFinCsatResponseRatingEnumTerrible SubmitFinCsatResponseRatingEnum = "terrible"
+	SubmitFinCsatResponseRatingEnumBad      SubmitFinCsatResponseRatingEnum = "bad"
+	SubmitFinCsatResponseRatingEnumOk       SubmitFinCsatResponseRatingEnum = "ok"
+	SubmitFinCsatResponseRatingEnumGood     SubmitFinCsatResponseRatingEnum = "good"
+	SubmitFinCsatResponseRatingEnumAmazing  SubmitFinCsatResponseRatingEnum = "amazing"
+)
+
+// SubmitFinCsatResponseStatusEnum The result of the submission.
+type SubmitFinCsatResponseStatusEnum string
+
+const (
+	SubmitFinCsatResponseStatusEnumRated SubmitFinCsatResponseStatusEnum = "rated"
+)
+
+type ListFinCapabilitiesResponse struct {
+	// Version The API version the capabilities document was generated for.
+	Version *string `json:"version,omitempty"`
+	// Capabilities The list of capabilities available to this user.
+	Capabilities []ListFinCapabilitiesResponseCapabilities `json:"capabilities,omitempty"`
+}
+
+// NewListFinCapabilitiesResponse returns a validated ListFinCapabilitiesResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListFinCapabilitiesResponse(fields ListFinCapabilitiesResponse) (*ListFinCapabilitiesResponse, error) {
+	return ConstructModel(fields)
+}
+
+type ListFinCapabilitiesResponseCapabilities struct {
+	// Type The kind of capability — `procedure` for a runnable procedure, or a static action such as `reply`, `ask`, or `escalate`.
+	Type *string `json:"type,omitempty"`
+	// Id The procedure ID. Present only when `type` is `procedure`.
+	Id *string `json:"id,omitempty"`
+	// Name The procedure name. Present only when `type` is `procedure`.
+	Name *string `json:"name,omitempty"`
+	// Description A human-readable description of the capability.
+	Description *string `json:"description,omitempty"`
+	// Endpoint The endpoint path to call to use this capability.
+	Endpoint *string `json:"endpoint,omitempty"`
+	// Method The HTTP method to use.
+	Method *string `json:"method,omitempty"`
+}
+
+// NewListFinCapabilitiesResponseCapabilities returns a validated ListFinCapabilitiesResponseCapabilities built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListFinCapabilitiesResponseCapabilities(fields ListFinCapabilitiesResponseCapabilities) (*ListFinCapabilitiesResponseCapabilities, error) {
+	return ConstructModel(fields)
+}
+
+type AskFinResponse struct {
+	// ConversationId The external ID of the conversation.
+	ConversationId *string `json:"conversation_id,omitempty"`
+	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
+	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
+	// UserId The ID of the user.
+	UserId *string `json:"user_id,omitempty"`
+	// Status Fin's current status in the conversation workflow.
+	Status *AskFinResponseStatusEnum `json:"status,omitempty"`
+	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
+	CreatedAtMs *string `json:"created_at_ms,omitempty"`
+	// Errors Contains error details if any user or conversation attribute updates failed.
+	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
+	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
+	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
+}
+
+func (value *AskFinResponse) UnmarshalJSON(data []byte) error {
+	type AskFinResponseAlias AskFinResponse
+	var decoded AskFinResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = AskFinResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if value.CreatedAtMs != nil {
+		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewAskFinResponse returns a validated AskFinResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewAskFinResponse(fields AskFinResponse) (*AskFinResponse, error) {
+	return ConstructModel(fields)
+}
+
+// AskFinResponseStatusEnum Fin's current status in the conversation workflow.
+type AskFinResponseStatusEnum string
+
+const (
+	AskFinResponseStatusEnumThinking AskFinResponseStatusEnum = "thinking"
+	AskFinResponseStatusEnumReplying AskFinResponseStatusEnum = "replying"
+	AskFinResponseStatusEnumResolved AskFinResponseStatusEnum = "resolved"
+	AskFinResponseStatusEnumComplete AskFinResponseStatusEnum = "complete"
+)
+
+// RunFinProcedureConversationMetadata Metadata about the conversation. Only attributes are accepted (no history).
+type RunFinProcedureConversationMetadata struct {
+	// Attributes A hash of conversation attributes. Limit to 20 attributes.
+	Attributes map[string]any `json:"attributes,omitempty"`
+}
+
+// NewRunFinProcedureConversationMetadata returns a validated RunFinProcedureConversationMetadata built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewRunFinProcedureConversationMetadata(fields RunFinProcedureConversationMetadata) (*RunFinProcedureConversationMetadata, error) {
+	return ConstructModel(fields)
+}
+
+type RunFinProcedureResponse struct {
+	// ConversationId The ID of the conversation.
+	ConversationId *string `json:"conversation_id,omitempty"`
+	// IntercomConversationId The internal Intercom conversation ID, useful for matching this Agent API session to the conversation in Intercom.
+	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
+	// UserId The ID of the user.
+	UserId *string `json:"user_id,omitempty"`
+	// ProcedureId The ID of the procedure that was run.
+	ProcedureId *string `json:"procedure_id,omitempty"`
+	// Status Fin's current status in the conversation workflow.
+	Status *RunFinProcedureResponseStatusEnum `json:"status,omitempty"`
+	// CreatedAtMs The timestamp the response was created at, with millisecond precision.
+	CreatedAtMs *string `json:"created_at_ms,omitempty"`
+	// Errors Contains error details if any user or conversation attribute updates failed.
+	Errors *FinAgentAttributeErrors `json:"errors,omitempty"`
+	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to awaiting_user_reply or complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires.
+	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
+}
+
+func (value *RunFinProcedureResponse) UnmarshalJSON(data []byte) error {
+	type RunFinProcedureResponseAlias RunFinProcedureResponse
+	var decoded RunFinProcedureResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = RunFinProcedureResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if value.CreatedAtMs != nil {
+		if err := ValidateModelDateTime("created_at_ms", *value.CreatedAtMs); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewRunFinProcedureResponse returns a validated RunFinProcedureResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewRunFinProcedureResponse(fields RunFinProcedureResponse) (*RunFinProcedureResponse, error) {
+	return ConstructModel(fields)
+}
+
+// RunFinProcedureResponseStatusEnum Fin's current status in the conversation workflow.
+type RunFinProcedureResponseStatusEnum string
+
+const (
+	RunFinProcedureResponseStatusEnumThinking          RunFinProcedureResponseStatusEnum = "thinking"
+	RunFinProcedureResponseStatusEnumReplying          RunFinProcedureResponseStatusEnum = "replying"
+	RunFinProcedureResponseStatusEnumAwaitingUserReply RunFinProcedureResponseStatusEnum = "awaiting_user_reply"
+	RunFinProcedureResponseStatusEnumEscalated         RunFinProcedureResponseStatusEnum = "escalated"
+	RunFinProcedureResponseStatusEnumResolved          RunFinProcedureResponseStatusEnum = "resolved"
+	RunFinProcedureResponseStatusEnumComplete          RunFinProcedureResponseStatusEnum = "complete"
+)
+
+type EscalateFinConversationResponse struct {
+	// ConversationId The external ID of the conversation. Returned when you escalate an existing conversation by `conversation_id` (echoed back). When you escalate a `user`, a new conversation is created and only `intercom_conversation_id` is returned.
+	ConversationId *string `json:"conversation_id,omitempty"`
+	// IntercomConversationId The internal Intercom conversation ID. Returned when a new conversation was created for the escalation.
+	IntercomConversationId *string `json:"intercom_conversation_id,omitempty"`
+	// SseSubscriptionUrl Optional. A URL to subscribe to Server-Sent Events (SSE) for this conversation, if SSE is enabled. The access token is a JWT with a 3-minute TTL. The token is revoked when Fin sets the conversation to complete status. When CSAT is enabled and a survey will follow the resolution, `complete` revocation is deferred until the `csat_requested` event is delivered or the token expires. Includes a `rewind` window so a subscriber that connects after the escalation is processed can still receive the `escalated` and `complete` events.
+	SseSubscriptionUrl *string `json:"sse_subscription_url,omitempty"`
+	// Status The resulting status of the conversation.
+	Status *EscalateFinConversationResponseStatusEnum `json:"status,omitempty"`
+}
+
+// NewEscalateFinConversationResponse returns a validated EscalateFinConversationResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewEscalateFinConversationResponse(fields EscalateFinConversationResponse) (*EscalateFinConversationResponse, error) {
+	return ConstructModel(fields)
+}
+
+// EscalateFinConversationResponseStatusEnum The resulting status of the conversation.
+type EscalateFinConversationResponseStatusEnum string
+
+const (
+	EscalateFinConversationResponseStatusEnumEscalated EscalateFinConversationResponseStatusEnum = "escalated"
+)

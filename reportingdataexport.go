@@ -8,76 +8,6 @@ import (
 	"fmt"
 )
 
-type CreateEnqueueResponse struct {
-	JobIdentifier     *string `json:"job_identifier,omitempty"`
-	Status            *string `json:"status,omitempty"`
-	DownloadUrl       *string `json:"download_url,omitempty"`
-	DownloadExpiresAt *string `json:"download_expires_at,omitempty"`
-}
-
-// NewCreateEnqueueResponse returns a validated CreateEnqueueResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCreateEnqueueResponse(fields CreateEnqueueResponse) (*CreateEnqueueResponse, error) {
-	return ConstructModel(fields)
-}
-
-type GetReportingDataResponse struct {
-	JobIdentifier     *string `json:"job_identifier,omitempty"`
-	Status            *string `json:"status,omitempty"`
-	DownloadUrl       *string `json:"download_url,omitempty"`
-	DownloadExpiresAt *string `json:"download_expires_at,omitempty"`
-}
-
-// NewGetReportingDataResponse returns a validated GetReportingDataResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewGetReportingDataResponse(fields GetReportingDataResponse) (*GetReportingDataResponse, error) {
-	return ConstructModel(fields)
-}
-
-type ListGetDatasetsResponse struct {
-	Type *string                       `json:"type,omitempty"`
-	Data []ListGetDatasetsResponseData `json:"data,omitempty"`
-}
-
-// NewListGetDatasetsResponse returns a validated ListGetDatasetsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListGetDatasetsResponse(fields ListGetDatasetsResponse) (*ListGetDatasetsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type ListGetDatasetsResponseData struct {
-	Id                     *string                                 `json:"id,omitempty"`
-	Name                   *string                                 `json:"name,omitempty"`
-	Description            *string                                 `json:"description,omitempty"`
-	DefaultTimeAttributeId *string                                 `json:"default_time_attribute_id,omitempty"`
-	Attributes             []ListGetDatasetsResponseDataAttributes `json:"attributes,omitempty"`
-}
-
-// NewListGetDatasetsResponseData returns a validated ListGetDatasetsResponseData built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListGetDatasetsResponseData(fields ListGetDatasetsResponseData) (*ListGetDatasetsResponseData, error) {
-	return ConstructModel(fields)
-}
-
-type ListGetDatasetsResponseDataAttributes struct {
-	// Id The simple attribute identifier. Note that this may be ambiguous if the same name exists across different attribute types. Use qualified_id when calling the enqueue endpoint.
-	Id *string `json:"id,omitempty"`
-	// QualifiedId A namespaced identifier that uniquely identifies the attribute across all types. Format is "prefix.name" (e.g., "people.Brand", "conversation.Brand"). Required when calling the enqueue endpoint.
-	QualifiedId *string `json:"qualified_id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-}
-
-// NewListGetDatasetsResponseDataAttributes returns a validated ListGetDatasetsResponseDataAttributes built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListGetDatasetsResponseDataAttributes(fields ListGetDatasetsResponseDataAttributes) (*ListGetDatasetsResponseDataAttributes, error) {
-	return ConstructModel(fields)
-}
-
 type CreateEnqueueParams struct {
 	DatasetId       string
 	AttributeIds    []string
@@ -221,4 +151,74 @@ func GetReportingData2(ctx context.Context, clientConfig ClientConfig, params Ge
 		return nil, err
 	}
 	return nil, nil
+}
+
+type CreateEnqueueResponse struct {
+	JobIdentifier     *string `json:"job_identifier,omitempty"`
+	Status            *string `json:"status,omitempty"`
+	DownloadUrl       *string `json:"download_url,omitempty"`
+	DownloadExpiresAt *string `json:"download_expires_at,omitempty"`
+}
+
+// NewCreateEnqueueResponse returns a validated CreateEnqueueResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCreateEnqueueResponse(fields CreateEnqueueResponse) (*CreateEnqueueResponse, error) {
+	return ConstructModel(fields)
+}
+
+type GetReportingDataResponse struct {
+	JobIdentifier     *string `json:"job_identifier,omitempty"`
+	Status            *string `json:"status,omitempty"`
+	DownloadUrl       *string `json:"download_url,omitempty"`
+	DownloadExpiresAt *string `json:"download_expires_at,omitempty"`
+}
+
+// NewGetReportingDataResponse returns a validated GetReportingDataResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewGetReportingDataResponse(fields GetReportingDataResponse) (*GetReportingDataResponse, error) {
+	return ConstructModel(fields)
+}
+
+type ListGetDatasetsResponse struct {
+	Type *string                       `json:"type,omitempty"`
+	Data []ListGetDatasetsResponseData `json:"data,omitempty"`
+}
+
+// NewListGetDatasetsResponse returns a validated ListGetDatasetsResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListGetDatasetsResponse(fields ListGetDatasetsResponse) (*ListGetDatasetsResponse, error) {
+	return ConstructModel(fields)
+}
+
+type ListGetDatasetsResponseData struct {
+	Id                     *string                                 `json:"id,omitempty"`
+	Name                   *string                                 `json:"name,omitempty"`
+	Description            *string                                 `json:"description,omitempty"`
+	DefaultTimeAttributeId *string                                 `json:"default_time_attribute_id,omitempty"`
+	Attributes             []ListGetDatasetsResponseDataAttributes `json:"attributes,omitempty"`
+}
+
+// NewListGetDatasetsResponseData returns a validated ListGetDatasetsResponseData built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListGetDatasetsResponseData(fields ListGetDatasetsResponseData) (*ListGetDatasetsResponseData, error) {
+	return ConstructModel(fields)
+}
+
+type ListGetDatasetsResponseDataAttributes struct {
+	// Id The simple attribute identifier. Note that this may be ambiguous if the same name exists across different attribute types. Use qualified_id when calling the enqueue endpoint.
+	Id *string `json:"id,omitempty"`
+	// QualifiedId A namespaced identifier that uniquely identifies the attribute across all types. Format is "prefix.name" (e.g., "people.Brand", "conversation.Brand"). Required when calling the enqueue endpoint.
+	QualifiedId *string `json:"qualified_id,omitempty"`
+	Name        *string `json:"name,omitempty"`
+}
+
+// NewListGetDatasetsResponseDataAttributes returns a validated ListGetDatasetsResponseDataAttributes built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListGetDatasetsResponseDataAttributes(fields ListGetDatasetsResponseDataAttributes) (*ListGetDatasetsResponseDataAttributes, error) {
+	return ConstructModel(fields)
 }

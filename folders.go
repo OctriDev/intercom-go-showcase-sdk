@@ -10,106 +10,6 @@ import (
 	"fmt"
 )
 
-type ListFoldersResponse struct {
-	Type *ListFoldersResponseTypeEnum `json:"type,omitempty"`
-	Data []Folder                     `json:"data,omitempty"`
-	// TotalCount Total number of folders
-	TotalCount *int64 `json:"total_count,omitempty"`
-	// Pages The majority of list resources in the API are paginated to allow clients to traverse data over multiple requests.
-	//
-	// Their responses are likely to contain a pages object that hosts pagination links which a client can use to paginate through the data without having to construct a query. The link relations for the pages field are as follows.
-	Pages *PagesLink `json:"pages,omitempty"`
-}
-
-// NewListFoldersResponse returns a validated ListFoldersResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewListFoldersResponse(fields ListFoldersResponse) (*ListFoldersResponse, error) {
-	return ConstructModel(fields)
-}
-
-type ListFoldersResponseTypeEnum string
-
-const (
-	ListFoldersResponseTypeEnumList ListFoldersResponseTypeEnum = "list"
-)
-
-type CreateFolderFolder struct {
-	// Name The name of the folder
-	Name string `json:"name"`
-	// Description The description of the folder
-	Description *string `json:"description,omitempty"`
-	// Emoji An emoji for the folder
-	Emoji *string `json:"emoji,omitempty"`
-	// ParentFolderId The ID of the parent folder
-	ParentFolderId *NullableValue[int64] `json:"parent_folder_id,omitempty"`
-}
-
-func (value *CreateFolderFolder) UnmarshalJSON(data []byte) error {
-	type CreateFolderFolderAlias CreateFolderFolder
-	var decoded CreateFolderFolderAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CreateFolderFolder(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"name"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"name"}); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["parent_folder_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.ParentFolderId = &NullableValue[int64]{}
-	}
-	return nil
-}
-
-// NewCreateFolderFolder returns a validated CreateFolderFolder built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCreateFolderFolder(fields CreateFolderFolder) (*CreateFolderFolder, error) {
-	return ConstructModel(fields)
-}
-
-type UpdateFolderFolder struct {
-	// Name The name of the folder
-	Name *string `json:"name,omitempty"`
-	// Description The description of the folder
-	Description *string `json:"description,omitempty"`
-	// Emoji An emoji for the folder
-	Emoji *string `json:"emoji,omitempty"`
-	// ParentFolderId The ID of the parent folder
-	ParentFolderId *NullableValue[int64] `json:"parent_folder_id,omitempty"`
-}
-
-func (value *UpdateFolderFolder) UnmarshalJSON(data []byte) error {
-	type UpdateFolderFolderAlias UpdateFolderFolder
-	var decoded UpdateFolderFolderAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = UpdateFolderFolder(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["parent_folder_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.ParentFolderId = &NullableValue[int64]{}
-	}
-	return nil
-}
-
-// NewUpdateFolderFolder returns a validated UpdateFolderFolder built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewUpdateFolderFolder(fields UpdateFolderFolder) (*UpdateFolderFolder, error) {
-	return ConstructModel(fields)
-}
-
 type ListFoldersParams struct {
 	Page            *int64
 	PerPage         *int64
@@ -274,4 +174,104 @@ func DeleteFolder(ctx context.Context, clientConfig ClientConfig, params DeleteF
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+type ListFoldersResponse struct {
+	Type *ListFoldersResponseTypeEnum `json:"type,omitempty"`
+	Data []Folder                     `json:"data,omitempty"`
+	// TotalCount Total number of folders
+	TotalCount *int64 `json:"total_count,omitempty"`
+	// Pages The majority of list resources in the API are paginated to allow clients to traverse data over multiple requests.
+	//
+	// Their responses are likely to contain a pages object that hosts pagination links which a client can use to paginate through the data without having to construct a query. The link relations for the pages field are as follows.
+	Pages *PagesLink `json:"pages,omitempty"`
+}
+
+// NewListFoldersResponse returns a validated ListFoldersResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewListFoldersResponse(fields ListFoldersResponse) (*ListFoldersResponse, error) {
+	return ConstructModel(fields)
+}
+
+type ListFoldersResponseTypeEnum string
+
+const (
+	ListFoldersResponseTypeEnumList ListFoldersResponseTypeEnum = "list"
+)
+
+type CreateFolderFolder struct {
+	// Name The name of the folder
+	Name string `json:"name"`
+	// Description The description of the folder
+	Description *string `json:"description,omitempty"`
+	// Emoji An emoji for the folder
+	Emoji *string `json:"emoji,omitempty"`
+	// ParentFolderId The ID of the parent folder
+	ParentFolderId *NullableValue[int64] `json:"parent_folder_id,omitempty"`
+}
+
+func (value *CreateFolderFolder) UnmarshalJSON(data []byte) error {
+	type CreateFolderFolderAlias CreateFolderFolder
+	var decoded CreateFolderFolderAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = CreateFolderFolder(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"name"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"name"}); err != nil {
+		return err
+	}
+	if raw, ok := rawFields["parent_folder_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.ParentFolderId = &NullableValue[int64]{}
+	}
+	return nil
+}
+
+// NewCreateFolderFolder returns a validated CreateFolderFolder built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCreateFolderFolder(fields CreateFolderFolder) (*CreateFolderFolder, error) {
+	return ConstructModel(fields)
+}
+
+type UpdateFolderFolder struct {
+	// Name The name of the folder
+	Name *string `json:"name,omitempty"`
+	// Description The description of the folder
+	Description *string `json:"description,omitempty"`
+	// Emoji An emoji for the folder
+	Emoji *string `json:"emoji,omitempty"`
+	// ParentFolderId The ID of the parent folder
+	ParentFolderId *NullableValue[int64] `json:"parent_folder_id,omitempty"`
+}
+
+func (value *UpdateFolderFolder) UnmarshalJSON(data []byte) error {
+	type UpdateFolderFolderAlias UpdateFolderFolder
+	var decoded UpdateFolderFolderAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = UpdateFolderFolder(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if raw, ok := rawFields["parent_folder_id"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.ParentFolderId = &NullableValue[int64]{}
+	}
+	return nil
+}
+
+// NewUpdateFolderFolder returns a validated UpdateFolderFolder built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewUpdateFolderFolder(fields UpdateFolderFolder) (*UpdateFolderFolder, error) {
+	return ConstructModel(fields)
 }

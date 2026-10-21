@@ -645,8 +645,8 @@ func (sdk *TicketsNamespace) LinkConversation(ctx context.Context, params LinkTi
 //	Intercom.
 //	id: The unique identifier (given by Intercom) for the linked conversation or
 //	customer ticket to unlink.
-func (sdk *TicketsNamespace) UnlinkConversation(ctx context.Context, params UnlinkTicketsConversationParams, opts ...RequestOption) (*Conversation, error) {
-	return UnlinkTicketsConversation(ctx, sdk.config, params, opts...)
+func (sdk *TicketsNamespace) UnlinkConversation(ctx context.Context, params UnlinkTicketConversationParams, opts ...RequestOption) (*Conversation, error) {
+	return UnlinkTicketConversation(ctx, sdk.config, params, opts...)
 }
 
 // Create creates a ticket using a ticket type and one or more affected contacts. Supply `ticket_type_id` and `contacts`; you can also provide ticket attributes, assignment details, or a conversation to link. A 200 response returns the created ticket and its current state.

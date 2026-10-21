@@ -22898,9 +22898,9 @@
       }
     },
     {
-      "id": "unlinkTicketsConversation:UnlinkTicketsConversation",
-      "operationId": "unlinkTicketsConversation",
-      "methodName": "UnlinkTicketsConversation",
+      "id": "unlinkTicketConversation:UnlinkTicketConversation",
+      "operationId": "unlinkTicketConversation",
+      "methodName": "UnlinkTicketConversation",
       "namespace": [
         "tickets"
       ],
@@ -22966,9 +22966,9 @@
       }
     },
     {
-      "id": "unlinkTicketsConversation:UnlinkTicketsConversation:400",
-      "operationId": "unlinkTicketsConversation",
-      "methodName": "UnlinkTicketsConversation",
+      "id": "unlinkTicketConversation:UnlinkTicketConversation:400",
+      "operationId": "unlinkTicketConversation",
+      "methodName": "UnlinkTicketConversation",
       "namespace": [
         "tickets"
       ],
